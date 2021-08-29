@@ -1,3 +1,12 @@
+# как чекнуть
+1. make up-infra
+2. убить make up-infa (там какая то инициализация постгри)
+3. make up-infra
+4. make up-work1
+5. make up-work2
+6. make up-dagit
+7. сделать как [тут](#dagit)
+
 
 # Dagster Celery Example
 

@@ -5,6 +5,8 @@ from dagster import pipeline, solid, Output, OutputDefinition, InputDefinition, 
 from dagster_aws.s3 import s3_intermediate_storage
 from dagster_celery import celery_executor
 
+import socket
+hostname = socket.gethostbyname(socket.gethostname())
 
 # The minio_resource was copied and adapted from s3_resource because s3_resource does not support
 # specifying access keys.
@@ -38,7 +40,8 @@ def minio_resource(context):
     output_defs=[OutputDefinition(name="out1", dagster_type=str)]
 )
 def basic_solid(context, in1):
-    context.log.info('Running basic_solid for "{}"'.format(in1))
+    print('ONE')
+    context.log.info('Running basic_solid for "{}", "{}"'.format(in1, hostname))
     yield Output('basic_solid({})'.format(in1), output_name='out1')
 
 
@@ -48,7 +51,8 @@ def basic_solid(context, in1):
     tags={'dagster-celery/queue': 'gpu'}
 )
 def gpu_solid(context, in1):
-    context.log.info('Running gpu_solid for "{}"'.format(in1))
+    print('TWO')
+    context.log.info('Running gpu_solid for "{}", "{}'.format(in1, hostname))
     yield Output('gpu_solid({})'.format(in1), output_name='out1')
 
 
@@ -66,7 +70,7 @@ def the_pipeline():
     gpu_solid(r1)
 
 
-@repository(name='the repository')
+@repository(name='the_repository')
 def the_repository():
     return [the_pipeline]
 
