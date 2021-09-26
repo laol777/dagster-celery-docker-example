@@ -86,3 +86,26 @@ resources:
       access_key: minio
       secret_key: miniosecret
 ```
+
+new config
+```yaml
+solids: 
+  get_files_paths:
+    config:
+      path_idx: /data_ppl/idx-mitosis.txt
+execution:
+  celery:
+    config:
+      broker: pyamqp://rabbit:rabbit@rabbit:5672//
+      backend: db+postgresql://postgres:postgres@postgres:5432/dagster_celery
+intermediate_storage:
+  s3:
+    config:
+      s3_bucket: dagster-intermediates
+resources:
+  s3:
+    config:
+      endpoint_url: http://minio:9000/
+      access_key: minio
+      secret_key: miniosecret
+```

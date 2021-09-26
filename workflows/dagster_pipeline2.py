@@ -25,9 +25,7 @@ from typing import List as L, Dict as D, Optional as O, Union as U
 
 
 
-@solid(
-    tags={'dagster-celery/queue': 'cpu'}
-)
+@solid
 def get_files_paths(context) -> L[dict]:
     path_idx = context.solid_config['path_idx']
     if not os.path.isfile(path_idx):
@@ -45,8 +43,7 @@ def get_files_paths(context) -> L[dict]:
 
 
 @solid(
-    output_defs=[DynamicOutputDefinition(dict)],
-    tags={'dagster-celery/queue': 'cpu'}
+    output_defs=[DynamicOutputDefinition(dict)]
 )
 def generate_subtasks(context, data: L[dict]):
     context.log.info(f'!!! #input-data: {len(data)}')
@@ -54,9 +51,7 @@ def generate_subtasks(context, data: L[dict]):
         yield DynamicOutput(x, mapping_key=x['task_key'])
 
 
-@solid(
-    tags={'dagster-celery/queue': 'cpu'}
-)
+@solid
 def process_image(context, sample: dict, sleep_sec: float = 0.1) -> dict:
     time.sleep(sleep_sec)
     path_img = sample['path']
@@ -69,9 +64,7 @@ def process_image(context, sample: dict, sleep_sec: float = 0.1) -> dict:
     }
 
 
-@solid(
-    tags={'dagster-celery/queue': 'cpu'}
-)
+@solid
 def process_scalar(context, sample: dict, sleep_sec: float = 0.1) -> dict:
     time.sleep(sleep_sec)
     mean_value = 10. * sample['mean']

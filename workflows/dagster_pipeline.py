@@ -5,6 +5,7 @@ from dagster import pipeline, solid, Output, OutputDefinition, InputDefinition, 
 from dagster_aws.s3 import s3_intermediate_storage
 from dagster_celery import celery_executor
 from dagster_pipeline2 import map_pipeline
+from dagster_pipeline2 import get_files_paths, generate_subtasks, process_image, reduce_results
 
 import socket
 hostname = socket.gethostbyname(socket.gethostname())
@@ -71,7 +72,16 @@ def the_pipeline():
     gpu_solid(r1)
 
 
+@pipeline(mode_defs=mode_definitions)
+def map_pipeline2():
+    files_info = get_files_paths()
+    ret_map = generate_subtasks(files_info).map(process_image)
+    ret = reduce_results(ret_map.collect())
+    # ret = ret_map
+    return ret
+
+
 @repository(name='the_repository')
 def the_repository():
-    return [the_pipeline, map_pipeline]
+    return [the_pipeline, map_pipeline, map_pipeline2]
 
