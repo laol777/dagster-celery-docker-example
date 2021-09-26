@@ -35,6 +35,7 @@ services:
       - '9000:9000'
     volumes:
       - ./.minio:/data
+      - ./data:/data_ppl
     depends_on:
       - postgres
     environment:
@@ -56,6 +57,7 @@ services:
     image: dagster-celery-worker
     volumes:
       - ./workflows:/app
+      - ./data:/data_ppl
     depends_on:
       - postgres
     entrypoint: "dagster-celery worker start --loglevel=info --app=dagster_celery.app -y celeryconfig.yaml --name generic-worker"
@@ -69,6 +71,7 @@ services:
     image: dagster-celery-worker
     volumes:
       - ./workflows:/app
+      - ./data:/data_ppl
     depends_on:
       - postgres
     entrypoint: "dagster-celery worker start --loglevel=info --app=dagster_celery.app -y celeryconfig.yaml -q gpu --name gpu-worker"
@@ -82,10 +85,10 @@ services:
       - 3000:3000 # Dagit
     volumes:
       - ./workflows:/app
+      - ./data:/data_ppl
     depends_on:
       - postgres
     entrypoint: dagit --host 0.0.0.0 -f dagster_pipeline.py
     environment: 
       DAGSTER_HOME: /app
-          
-    
+

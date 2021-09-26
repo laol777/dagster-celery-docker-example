@@ -4,6 +4,7 @@ from dagster import pipeline, solid, Output, OutputDefinition, InputDefinition, 
     Field, repository
 from dagster_aws.s3 import s3_intermediate_storage
 from dagster_celery import celery_executor
+from dagster_pipeline2 import map_pipeline
 
 import socket
 hostname = socket.gethostbyname(socket.gethostname())
@@ -72,5 +73,5 @@ def the_pipeline():
 
 @repository(name='the_repository')
 def the_repository():
-    return [the_pipeline]
+    return [the_pipeline, map_pipeline]
 
